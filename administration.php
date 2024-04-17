@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (empty($_SESSION['ID_MEMBRE_CONNECTE'])) {
+  echo "you are not allowed to enter this page ";
+  die;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

@@ -8,25 +8,25 @@ if (!$idcom) {
     exit;
 }
 
-if (empty($_SESSION['ID_MEMBRE_CONNECTE'])) {
-    echo "YOU  are NOT allowed TO enter THIS page , get the hell out !";
-    exit;
-}
+if (!empty($_SESSION['ID_MEMBRE_CONNECTE'])) {
+    $ID_MEMBRE_CONNECTE = $_SESSION['ID_MEMBRE_CONNECTE'];
 
-$ID_MEMBRE_CONNECTE = $_SESSION['ID_MEMBRE_CONNECTE'];
+    $requete_membre = "SELECT NOM, PRENOM, DATENAISS, NATIONALITE 
+        FROM comite c, participant p
+        WHERE p.id_part = c.id_part 
+        and id_membre= :id_membre";
 
-$requete_membre = "SELECT NOM, PRENOM, DATENAISS, NATIONALITE 
-    FROM comite c, participant p
-    WHERE p.id_part = c.id_part 
-    and id_membre= :id_membre";
+    $stid_membre = executerReq($idcom, $requete_membre, [":id_membre"], [$ID_MEMBRE_CONNECTE]);
 
-$stid_membre = executerReq($idcom, $requete_membre, [":id_membre"], [$ID_MEMBRE_CONNECTE]);
-
-if ($result = oci_fetch_array($stid_membre, OCI_ASSOC + OCI_RETURN_NULLS)) {
-    $nom = $result['NOM'];
-    $prenom = $result['PRENOM'];
-    $dateNaiss = $result['DATENAISS'];
-    $nation = $result['NATIONALITE'];
+    if ($result = oci_fetch_array($stid_membre, OCI_ASSOC + OCI_RETURN_NULLS)) {
+        $nom = $result['NOM'];
+        $prenom = $result['PRENOM'];
+        $dateNaiss = $result['DATENAISS'];
+        $nation = $result['NATIONALITE'];
+    }
+} else {
+    echo "you are not allowed to enter this page : access forbidden <>";
+    die;
 }
 ?>
 <!DOCTYPE html>

@@ -4,23 +4,23 @@ include("connexion_OCI.php");
 include_once("fonctions.php");
 $idcom = connexion_OCI();
 if (!$idcom) {
-    echo "connexion à la base de données IMPOSSIBLE ///";
-    exit;
+	echo "connexion à la base de données IMPOSSIBLE ///";
+	exit;
 } else {
-    echo "connextion reussi"."<BR>";
+	echo "connextion reussi" . "<BR>";
 }
 
 
 echo "<a href='membreProfile.php'>Retour au profil</a><br><br>";
 
-if(isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
-    $id_compet = $_GET["id_compet"]; // Récupérer l'identifiant de la compétition depuis l'URL
-    $type_compet = $_GET["type_co"]; // Récupérer le type de compétition depuis l'URL
+if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
+	$id_compet = $_GET["id_compet"]; // Récupérer l'identifiant de la compétition depuis l'URL
+	$type_compet = $_GET["type_co"]; // Récupérer le type de compétition depuis l'URL
 
-    echo "COMPETITION : " . $type_compet . "<br><br>";
+	echo "COMPETITION : " . $type_compet . "<br><br>";
 
 
-	
+
 	// afficher les athletes participants à la compet :
 	$requete_athletes = "SELECT p.id_part, p.NOM, p.PRENOM 
 	FROM competition c, participe pt, participant p, athlete a 
@@ -40,20 +40,20 @@ if(isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 		and c.ID_COMPET = :ID_COMPET 
 		AND upper(pt.TYPE_EPREUVE) = :TYPE_EPREUVE
 		AND NUM_EPREUVE = :NUM_EPREUVE ";
-		
-		
+
+
 	echo "<table border='5'><th colspan='4'> QUART DE FINALE </th> </table>";
-	
+
 	echo "<form method='post' action='delete_participant.php'>";
 	echo "<input type='hidden' name='id_compet' value='$id_compet'>";
 	echo "<input type='hidden' name='type_compet' value='$type_compet'>";
-	
-	
+
+
 	echo "<table border='3'>";
 	echo "<th> Epreuve  </th> <th>Athlete </th> <th>Arbitre </th>";
 	for ($j = 1; $j <= 4; $j++) {
-		$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","QUART DE FINALE", $j]);
-		$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","QUART DE FINALE", $j]);
+		$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "QUART DE FINALE", $j]);
+		$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "QUART DE FINALE", $j]);
 		echo "<tr> <td> Quart de finale num {$j} : </td>";
 		//athletes:
 		echo "<td>";
@@ -70,16 +70,16 @@ if(isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 		echo "</tr>";
 	}
 	echo "</table>";
-	
-	
-	
+
+
+
 	// les demis-finale : 
 	echo "<table border = 5><th colspan=3> DEMI FINALE </th> </table>";
 	echo "<table border = 3>";
 	echo "<th> Epreuve  </th> <th>athlete </th> <th>arbitres </th>";
 	for ($j = 1; $j <= 2; $j++) {
-		$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","DEMI-FINALE", $j]);
-		$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","DEMI-FINALE", $j]);
+		$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "DEMI-FINALE", $j]);
+		$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "DEMI-FINALE", $j]);
 		echo "<tr> <td> demi-finale num {$j} : </td>";
 		// afficher les athletes :
 		echo "<td>";
@@ -87,7 +87,7 @@ if(isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 			echo "<input type='checkbox' name='part_supp_array[]' value='DEMI-FINALE_{$row["ID_PART"]}_{$j}'> {$row["NOM"]} {$row["PRENOM"]}<br>";
 		}
 		echo "</td>";
-		
+
 		//afficher les arbitres :
 		echo "<td>";
 		while ($row = oci_fetch_array($arbitre_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
@@ -97,47 +97,57 @@ if(isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 		echo "</tr>";
 	}
 	echo "</table>";
-	
-	
+
+
 	// la finale : 
 	echo "<table border = 5><th colspan=3>FINALE </th> </table>";
 	echo "<table border = 3>";
 	echo "<th>athlete </th> <th>arbitres </th>";
-	
-	$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","FINALE", 1]);
-	$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET",":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet","FINALE", 1]);
+
+	$athlete_stid = executerReq($idcom, $requete_athletes, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "FINALE", 1]);
+	$arbitre_stid = executerReq($idcom, $requete_arbitres, [":ID_COMPET", ":TYPE_EPREUVE", "NUM_EPREUVE"], ["$id_compet", "FINALE", 1]);
 	echo "<tr><td>";
 	while ($row = oci_fetch_array($athlete_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
-			echo "<input type='checkbox' name='part_supp_array[]' value='FINALE_{$row["ID_PART"]}_1'> {$row["NOM"]} {$row["PRENOM"]}<br>";
+		echo "<input type='checkbox' name='part_supp_array[]' value='FINALE_{$row["ID_PART"]}_1'> {$row["NOM"]} {$row["PRENOM"]}<br>";
 	}
 	echo "</td>";
 	echo "<td>";
 	while ($row = oci_fetch_array($arbitre_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
-			echo "<input type='checkbox' name='part_supp_array[]' value='FINALE_{$row["ID_PART"]}_1'> {$row["NOM"]} {$row["PRENOM"]}<br>";
+		echo "<input type='checkbox' name='part_supp_array[]' value='FINALE_{$row["ID_PART"]}_1'> {$row["NOM"]} {$row["PRENOM"]}<br>";
 	}
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
-	
+
 	echo "<button type='submit' name ='supprimerAA' >retirer les participants selectionnés </button>";
 	echo "</form>";
-	
-	
-	// RESULTATS DE LA COMPETITIONS : 
-	$requete_resultats = "SELECT p.NOM , p.PRENOM , o.CLASSEMENT_ATHLETE , o.RESULTAT_ATHLETE
+
+
+	//modifier ?  RESULTATS DE LA COMPETITIONS : 
+	$requete_resultats = "SELECT p.ID_PART, p.NOM , p.PRENOM , o.CLASSEMENT_ATHLETE , o.RESULTAT_ATHLETE
 	FROM competition c , obtient_resultats_athlete o ,athlete a ,participant p
 	where c.id_compet = o.id_compet 
 	and a.id_athlete = o.id_athlete 
 	and a.id_part = p.id_part 
 	and c.id_compet =:id_compet
 	ORDER BY o.CLASSEMENT_ATHLETE ";
-	
+
 	$compet_stid = executerReq($idcom, $requete_resultats, [":id_compet"], [$id_compet]);
-	afficherRes($compet_stid,
-		["NOM", "PRENOM ", "CLASSEMENT", "RESULTATS"],
-		["NOM", "PRENOM", "CLASSEMENT_ATHLETE", "RESULTAT_ATHLETE"]);
-}
-else
-{
-	echo "manque deparam";
+	echo "<form method = 'post' action =competition.administration.change_Results.php>";
+	echo "<input type='hidden' name='competID' value = {$id_compet}>";
+	echo "<table border = 1>";
+	echo "<th> NOM </th> <th> PRENOM </th> <th> Classement </th> <th> resultats </th>";
+	while ($row = oci_fetch_assoc($compet_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+		echo "<tr>";
+		echo "<td> {$row['NOM']} </td>
+		<td> {$row['PRENOM']} </td>
+		<td><input type='text' name='classement_change[{$row['ID_PART']}]' value='{$row['CLASSEMENT_ATHLETE']}'></td>
+    	<td><input type='text' name='result_change[{$row['ID_PART']}]' value='{$row['RESULTAT_ATHLETE']}'></td>
+		</tr>";
+	}
+	echo "</table>";
+	echo "<input type='submit' name='change-results' value='change-results' >";
+	echo "</form>";
+} else {
+	echo "Access forbidden - GET[] ?  ";
 }
