@@ -73,9 +73,9 @@ while ($row = oci_fetch_array($athlete_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     <td>  {$row['TYPE_COMPET']} </td> 
     <!-- button modifier -->
 	 <td>
-		<form method='post'>
+		<form method='get'>
 			<input type='hidden' name='compet_id_tomodify' value='$id_compet_row'>
-			<a href='competition.administration.modif.php?id_compet=".$id_compet_row."&type_co=\"".$compet_rowName."\"'>
+			<a href='competition.administration.modif.php?id_compet=" . $id_compet_row . "&type_co=\"" . $compet_rowName . "\"'>
 				<button class='modify-button' type='button' name='modify_compet'></button>
 			</a>
 		</form> 
@@ -84,7 +84,7 @@ while ($row = oci_fetch_array($athlete_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
 
     <!-- button supprimer -->
     <td> 
-        <form method='post'>
+        <form method='get'>
         <input type='hidden' name='compet_id_todelete' value='$id_compet_row'>
         <button class='delete-button' type='submit' name='supp_compet'></button>
         </form> 
@@ -108,4 +108,3 @@ if (isset($_POST['supp_compet'])) // si on a cliqué sur le button supprimer .
     echo "<meta http-equiv='refresh' content='0;url=athletes.administration.php'>";
     exit;
 }
-

@@ -1,0 +1,35 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.delete-button,
+.modify-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Makes the button round */
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: #ff6347; /* Red color */
+    color: #fff;
+    background-size: cover; /* Make the background image cover the entire button */
+    background-repeat: no-repeat; 
+    background-position: center; 
+}
+
+.modify-button {
+    background-image: url('assets/image_modifier.png'); /* Path to your image */
+    background-color: transparent; /* Remove the background color */
+}
+
+.delete-button {
+    background-image: url('assets/delete_image.png'); /* Path to your image */
+    background-color: transparent; /* Remove the background color */
+}

@@ -1,9 +1,10 @@
 <?php
 function executerReq($idcom, $requete, $to_bind, $the_values)
 {
-    if (count($the_values) !==  count($to_bind)) {
-        return null;
-    }
+    // l'ordre est trEs trEs trEs important
+   // if (count($the_values) !==  count($to_bind)) {
+    //    return null;
+    //}
     $stid = oci_parse($idcom, $requete);
     if (!$stid) {
         $e = oci_error($idcom);

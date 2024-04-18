@@ -12,11 +12,11 @@ if (!$idcom) {
 <h1> EQUIPES </h1>
 <div class="athlete-container">
     <?php
-	$id_equipe = isset($_GET["id_eq"]) ? $_GET["id_eq"] : "";
-	$NOM_EQUIPE = isset($_GET["nom_eq"]) ? $_GET["nom_eq"] : "";
-	$nom_coach = isset($_GET["nom_coach"]) ? $_GET["nom_coach"] : "";
-	$prenom_coach = isset($_GET["prenom_coach"]) ? $_GET["prenom_coach"] : "";
-	
+    $id_equipe = isset($_GET["id_eq"]) ? $_GET["id_eq"] : "";
+    $NOM_EQUIPE = isset($_GET["nom_eq"]) ? $_GET["nom_eq"] : "";
+    $nom_coach = isset($_GET["nom_coach"]) ? $_GET["nom_coach"] : "";
+    $prenom_coach = isset($_GET["prenom_coach"]) ? $_GET["prenom_coach"] : "";
+
 
 
 
@@ -24,7 +24,7 @@ if (!$idcom) {
     echo "NOM DU COACH : $nom_coach $prenom_coach" . "<br>";
 
     // afficher les membre de l'equipe avec des lines sur leurs pages athlete.php?id_at = ...
-    echo "les membres de l'equipes sont : "."<br>";
+    echo "les membres de l'equipes sont : " . "<br>";
     $requete_athlete_dequipe = "SELECT p.NOM  , p.PRENOM , p.ID_ATHLETE , te.ROLE_TEAM
     FROM participant p , ALLTEAMED te , athlete a 
     WHERE p.id_part = a.id_part 
@@ -36,16 +36,16 @@ if (!$idcom) {
     echo "<table border = 1>";
     echo "<th> NOM </th> <th> PRENOM </th> <th> ROLE </th>";
     while ($row = oci_fetch_array($athl_eq_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
-		$id_athlete = $row['ID_ATHLETE'];
-		echo "<tr>";
-		echo "<td>{$row['NOM']}</td>";
-		echo "<td>{$row['PRENOM']}</td>";
-		echo "<td>{$row['ROLE_TEAM']}</td>";
-		echo "</tr>";
+        $id_athlete = $row['ID_ATHLETE'];
+        echo "<tr>";
+        echo "<td>{$row['NOM']}</td>";
+        echo "<td>{$row['PRENOM']}</td>";
+        echo "<td>{$row['ROLE_TEAM']}</td>";
+        echo "</tr>";
     }
 
     echo "</table> ";
-    
+
     echo "<br><br><br> ------------------------------------ <br><br><br>";
     // afficher ses resultats pendant ces JO :
     $requete_equipe_res = "SELECT o.CLASSEMENT_EQUIPE , o.RESULTAT_EQUIPE , d.NOM_DISCP

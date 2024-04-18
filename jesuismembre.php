@@ -6,15 +6,10 @@ $idcom = connexion_OCI();
 if (!$idcom) {
     echo "connexion à la base de données IMPOSSIBLE ///";
     exit;
-}
-
-// si le membre du comité est déjà connecté , il est directement redirigé vers sa page ( son profil ...  )
-if (isset($_SESSION['ID_MEMBRE_CONNECTE'])) {
-    header('Location: membreProfile.php');
-    exit;
+} else {
+    echo "connextion reussi";
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,19 +32,17 @@ if (isset($_SESSION['ID_MEMBRE_CONNECTE'])) {
 </html>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $typed_id = trim($_POST['id_membre']);
     $typed_mdp = trim($_POST['mdp_membre']);
 
 
     if (!empty($typed_id) && !empty($typed_mdp)) {
-
+    	echo $typed_id ."----".$typed_mdp."<br>";
         $requete_psswd = "SELECT ID_MEMBRE, MOT_DE_PASSE
-            FROM comite
+            FROM COMITE
             WHERE ID_MEMBRE = :ID_MEMBRE";
 
         $stid_passwd = executerReq($idcom, $requete_psswd, [":ID_MEMBRE"], [$typed_id]);
-
         if ($row = oci_fetch_array($stid_passwd, OCI_ASSOC + OCI_RETURN_NULLS)) {
             // Verifiant le mot de passe .
             //  if (password_verify($typed_mdp, $row['MOT_DE_PASSE'])) {

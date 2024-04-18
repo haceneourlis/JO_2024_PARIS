@@ -1,34 +1,34 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
 
-function binding($tab_recherche, &$Le_Where, &$to_bind, &$the_values, $condition)
-{
-    for ($i = 0; $i < count($tab_recherche); $i++) {
-        if ($tab_recherche[$i] !== " ") {
-            // Replace #-# with the current element from tab_recherche
-            $new_condition = str_replace("#-#", $tab_recherche[$i], $condition);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Input Form</title>
+</head>
 
-            // Add the modified condition to Le_Where array
-            $Le_Where[] = $new_condition;
+<body>
+    <h2>Enter a Date</h2>
+    <form method="POST">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date_naissance">
+        <button type="submit">Submit</button>
+    </form>
 
-            // Add the binding parameter and the wildcard pattern for the search value
-            $to_bind[] = ":$tab_recherche[$i]";
-            $the_values[] = '%' . $tab_recherche[$i] . '%';
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (!empty($_POST["date_naissance"])) {
+
+            $date_naissance = $_POST["date_naissance"];
+            $date_naissance = preg_replace("/^([0-9]+)-([0-9]+)-([0-9]+)$/", "$3/$2/$1", $date_naissance);
+
+
+            echo "<p>Submitted Date: $date_naissance</p>";
+        } else {
+            echo "<p>No date submitted.</p>";
         }
     }
-}
+    ?>
+</body>
 
-$condition = "(p.nom LIKE :#-#
-OR p.prenom LIKE :#-#
-OR p.nationalite LIKE :#-#)";
-
-$Le_Where = array();
-$to_bind = array();
-$the_values = array();
-
-$tab_recherche = array("messi", "ronaldo", "neymar");
-binding($tab_recherche, $Le_Where, $to_bind, $the_values, $condition);
-
-// Output the result
-foreach ($Le_Where as $condition) {
-    echo $condition . "\n";
-}
+</html>
