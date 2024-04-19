@@ -49,8 +49,8 @@ if (!empty($_SESSION['ID_MEMBRE_CONNECTE'])) {
     </div>
 
     <div class="modify">
-        <a href="login_logout/modifyInfo.php">modifier les informations</a>
-        <a href="login_logout/modify_psswd.php">modifier le mot de passe </a>
+        <a href="modifyInfo.php">modifier les informations</a>
+        <a href="modify_psswd.php">modifier le mot de passe </a>
     </div>
     <br><br><br><br>
 

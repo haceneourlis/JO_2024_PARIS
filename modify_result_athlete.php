@@ -6,23 +6,11 @@ $idcom = connexion_OCI();
 if (!$idcom) {
     echo "connexion à la base de données IMPOSSIBLE ///";
     exit;
-} else {
-    echo "connextion reussi";
 }
-echo "<a href='competition.administration.modif.php'>GO BACK</a>";
-if (isset($_POST["modify_result"])) {
-    $result_to_modify = $_POST["id_athlete_result_modify"];
-    $result_to_modify = explode("###", $result_to_modify);
-    $id_athlete = $result_to_modify[0];
-    $id_compet = $result_to_modify[1];
 
-    echo "<form method='POST'>
-    Classement : <input type='text' name='classement'>
-    Resultat : <input type='text' name='result'>
-    <input type='hidden' name='id_athlete' value='$id_athlete'>
-    <input type='hidden' name='id_compet' value='$id_compet'>
-    <input type='submit' name='modifier' value='modify'>
-    </form>";
+if(isset($_POST['type_co']) && isset($_POST['Id_compet']) ){
+	    $type_co = $_POST["type_co"];
+	    $id_compet = $_POST["Id_compet"];
 }
 
 if (isset($_POST['modifier'])) {
@@ -48,11 +36,38 @@ if (isset($_POST['modifier'])) {
             [":classement", ":resultat", ":id_athlete", "id_compet"],
             [$classement, $resultat, $id_athlete, $id_compet]
         );
-
+          
         if ($resultat_stid) {
-            echo "succés !";
+        	setcookie("resultat_modifier_now","succes_modif",time() + 60 , "/");  
+			header("Location: competition.administration.modif.php?id_compet=".$id_compet."&type_co=".$type_co."");
+			exit; 
         } else {
-            echo "échec !";
+        	setcookie("resultat_modifier_now","error",time() + 60 , "/");  
+			header("Location: competition.administration.modif.php?id_compet=".$id_compet."&type_co=".$type_co."");
+			exit; 
         }
     }
 }
+
+echo "<a href='competition.administration.modif.php?id_compet=".$id_compet."&type_co=".$type_co."'> GO BACK </a> <br><br><br><br>";
+
+if (isset($_POST["modify_result"])) {
+    $result_to_modify = $_POST["id_athlete_result_modify"];
+    $result_to_modify = explode("###", $result_to_modify);
+    $id_athlete = $result_to_modify[0];
+    $id_compet = $result_to_modify[1];
+
+    
+
+    echo "<form method='POST'>
+    Classement : <input type='number' name='classement' step='1' required ><br>
+    Resultat : <input type='number' name='result'step='0.01' required ><br>
+    
+    <input type='hidden' name='id_athlete' value='$id_athlete'>
+    <input type='hidden' name='id_compet' value='$id_compet'>
+
+    <input type='submit' name='modifier' value='modify'>
+    </form>";
+}
+
+

@@ -104,18 +104,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<label for="nationalite">Nationalité:</label>
 		<select id="nationalite" name="nationalite_arbitre">
 		<option value="">Sélectionnez une nationalité</option>
-			<?php
-			$requete_nation = "SELECT DISTINCT NATIONALITE FROM PARTICIPANT";
-			$nation_stid = executerReq($idcom, $requete_nation, [], []);
-			if ($nation_stid) {
-				while ($row = oci_fetch_assoc($nation_stid)) {
-					echo "<option value='{$row["NATIONALITE"]}' $selected> {$row["NATIONALITE"]} </option>";
-				}
+		<?php
+		$requete_nation = "SELECT DISTINCT NATIONALITE FROM PARTICIPANT";
+		$nation_stid = executerReq($idcom, $requete_nation, [], []);
+		if ($nation_stid) {
+			while ($row = oci_fetch_assoc($nation_stid)) {
+				echo "<option value='{$row["NATIONALITE"]}' $selected> {$row["NATIONALITE"]} </option>";
 			}
-			?>
-		</select><br><br>
+		}
+		?>
+	</select><br><br>
 
-          
+
+        <input type="submit" value="Rechercher">
+        <input type="submit" name='reset_form1' value="Réinitialiser">
+     </form>
+        
+     <form method="POST">   
 		<label for="competition">Compétitions Arbitrés :</label>
 		<select id="competition" name="competition">
 		<option value="">Sélectionnez une compétition</option> 
@@ -132,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		</select><br><br>
 		
         <input type="submit" value="Rechercher">
-        <input type="submit" name='reset' value="Réinitialiser">
+        <input type="submit" name='reset_form2' value="Réinitialiser">
     </form>
     
 </body>
@@ -141,6 +146,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
+echo " la requete : <br> " . $requete_arbitres ;
+var_dump($to_bind);
+var_dump($the_values);
 // exécuter la requête ici :
 $arbitre_stid = executerReq($idcom, $requete_arbitres, $to_bind, $the_values);
 if ($arbitre_stid) {

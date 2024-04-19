@@ -6,8 +6,15 @@ $idcom = connexion_OCI();
 if (!$idcom) {
     echo "connexion à la base de données IMPOSSIBLE ///";
     exit;
-} else {
-    echo "connextion reussi";
+} 
+
+//echo "hello"."<br><br><br>";
+//echo $_SESSION["ID_MEMBRE_CONNECTE"] ."---";
+
+if(!empty($_SESSION["ID_MEMBRE_CONNECTE"]))
+{
+	header("Location: membreProfile.php");
+	exit();
 }
 ?>
 

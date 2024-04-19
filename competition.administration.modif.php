@@ -10,6 +10,27 @@ if (!$idcom) {
 	echo "connextion reussi" . "<BR>";
 }
 
+if (isset($_COOKIE["resultat_modifier_now"]) && !empty($_COOKIE["resultat_modifier_now"])) {
+	$le_cookie = $_COOKIE["resultat_modifier_now"];
+
+	if ($le_cookie == "succes_modif") {
+		echo "<script>alert('Résultats modifiés avec succés');</script>";
+	} else {
+		echo "<script>alert('échec ! résultats non modifiés ');</script>";
+	}
+	setcookie("resultat_modifier_now", "", time() - 3600, "/");
+}
+
+if (isset($_COOKIE["athlete_added"]) && !empty($_COOKIE["athlete_added"])) {
+	$le_cookie = $_COOKIE["athlete_added"];
+
+	if ($le_cookie == "sucess") {
+		echo "<script>alert('l'athlete a été ajouté à la competition ');</script>";
+	} else {
+		echo "<script>alert('échec ! ajout impossible ! ');</script>";
+	}
+	setcookie("athlete_added", "", time() - 3600, "/");
+}
 
 echo "<a href='membreProfile.php'>Retour au profil</a><br><br>";
 
@@ -18,6 +39,7 @@ if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 	$type_compet = $_GET["type_co"];
 
 	echo "COMPETITION : " . $type_compet . "<br><br>";
+	echo "<a href='ajouter_athlete_to_compet.php?id_compet=" . $id_compet . "?type_co=" . $type_compet . "'> ajouter athlete </a>";
 
 	// ajouter un participant à la competition .
 
@@ -164,7 +186,10 @@ if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
         <td>{$row["RESULTAT_ATHLETE"]}</td>
         <!-- button modifier -->
         <td>
-            <form method='post' action ='modify_result_athlete.php'>
+            <form method='post' action ='modify_result_athlete.php'> 
+                <input type='hidden' name='type_co' value='{$type_compet}'>
+                <input type='hidden' name='Id_compet' value='{$id_compet_modify}'>
+                
                 <input type='hidden' name='id_athlete_result_modify' value='$chaine_hidden'>
                 <button class='modify-button' type='submit' name='modify_result'></button>
             </form>

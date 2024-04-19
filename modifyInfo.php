@@ -30,7 +30,7 @@ if(empty($_SESSION['ID_MEMBRE_CONNECTE'])) {
         <input type="submit" value="submit">
 
         <br>
-        <a href="index.php">Go back to main page</a>
+        <a href="membreProfile.php">Go back to profile</a>
     </form>
 </body>
 
