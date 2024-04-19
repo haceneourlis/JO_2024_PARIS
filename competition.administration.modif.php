@@ -14,8 +14,8 @@ if (!$idcom) {
 echo "<a href='membreProfile.php'>Retour au profil</a><br><br>";
 
 if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
-	$id_compet = $_GET["id_compet"]; // Récupérer l'identifiant de la compétition depuis l'URL
-	$type_compet = $_GET["type_co"]; // Récupérer le type de compétition depuis l'URL
+	$id_compet = $_GET["id_compet"];
+	$type_compet = $_GET["type_co"];
 
 	echo "COMPETITION : " . $type_compet . "<br><br>";
 
@@ -132,41 +132,46 @@ if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
 
 	echo "<button type='submit' name ='supprimerAA' >retirer les participants selectionnés </button>";
 	echo "</form>";
-	// Assurez-vous d'avoir une fonction executerReq() sécurisée qui utilise des requêtes préparées.
-	
-	// Requête SQL avec des paramètres nommés
-	$requete_resultats = "SELECT p.ID_PART, p.NOM, p.PRENOM, o.CLASSEMENT_ATHLETE, o.RESULTAT_ATHLETE
-						 FROM competition c
-						 JOIN obtient_resultats_athlete o ON c.id_compet = o.id_compet
-						 JOIN athlete a ON a.id_athlete = o.id_athlete
-						 JOIN participant p ON a.id_part = p.id_part
-						 WHERE c.id_compet = :id_compet
-						 ORDER BY o.CLASSEMENT_ATHLETE";
-	
-	// Exécution de la requête avec le bon paramètre
+
+
+
+	// RESULTATS DE LA COMPETITIONS : 
+	$requete_resultats = "SELECT p.NOM , p.PRENOM , o.CLASSEMENT_ATHLETE , o.RESULTAT_ATHLETE , o.ID_ATHLETE , o.ID_COMPET
+		FROM competition c , obtient_resultats_athlete o ,athlete a ,participant p
+		where c.id_compet = o.id_compet 
+		and a.id_athlete = o.id_athlete 
+		and a.id_part = p.id_part 
+		and c.id_compet =:id_compet
+		ORDER BY o.CLASSEMENT_ATHLETE ";
+
+	echo "<table border=1>";
+	echo "
+        <th><strong> NOM </strong></th>
+        <th><strong> PRENOM </strong></th>
+        <th><strong> CLASSEMENT  </strong></th>
+        <th><strong> RESULTATS </strong></th>
+        <th> MODIFIER </th>
+    </tr>";
 	$compet_stid = executerReq($idcom, $requete_resultats, [":id_compet"], [$id_compet]);
-	
-	// Vérification si des résultats sont retournés avant d'afficher le formulaire
-	if (oci_fetch($compet_stid)) {
-		echo "<form method='post' action='competition.administration.change_Results.php'>";
-		echo "<input type='hidden' name='competID' value='{$id_compet}'>";
-		echo "<table border='1'>";
-		echo "<th>NOM</th><th>PRENOM</th><th>Classement</th><th>Résultats</th>";
-		
-		// Boucle sur les résultats et affichage dans le formulaire
-		while ($row = oci_fetch_assoc($compet_stid)) {
-			echo "<tr>";
-			echo "<td>{$row['NOM']}</td>
-				  <td>{$row['PRENOM']}</td>
-				  <td><input type='text' name='classement_change[{$row['ID_PART']}]' value='{$row['CLASSEMENT_ATHLETE']}'></td>
-				  <td><input type='text' name='result_change[{$row['ID_PART']}]' value='{$row['RESULTAT_ATHLETE']}'></td>";
-			echo "</tr>";
-		}
-		
-		echo "</table>";
-		echo "<input type='submit' name='change-results' value='Changer les résultats'>";
-		echo "</form>";
-	} else {
-		echo "Aucun résultat trouvé pour cette compétition.";
+	while ($row = oci_fetch_array($compet_stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+		$id_athlete_modify = $row['ID_ATHLETE'];
+		$id_compet_modify = $row['ID_COMPET'];
+		$chaine_hidden = $id_athlete_modify . "###" . $id_compet_modify;
+		echo "<tr>
+        <td>{$row["NOM"]}</td>
+        <td>{$row["PRENOM"]}</td>
+        <td>{$row["CLASSEMENT_ATHLETE"]}</td>
+        <td>{$row["RESULTAT_ATHLETE"]}</td>
+        <!-- button modifier -->
+        <td>
+            <form method='post' action ='modify_result_athlete.php'>
+                <input type='hidden' name='id_athlete_result_modify' value='$chaine_hidden'>
+                <button class='modify-button' type='submit' name='modify_result'></button>
+            </form>
+        </td>
+    </tr> ";
 	}
+} else {
+	echo "ACCES FORBIDDEN ";
+	exit();
 }
