@@ -1,5 +1,14 @@
 <?php
 session_start();
+include("../connexion_OCI.php");
+include_once("../fonctions.php");
+$idcom = connexion_OCI();
+if (!$idcom) {
+    echo "connexion à la base de données IMPOSSIBLE ///";
+    exit;
+} else {
+    echo "connexion reussi";
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['reset'])) {

@@ -1,5 +1,14 @@
 <?php
 session_start();
+include("../connexion_OCI.php");
+include_once("../fonctions.php");
+$idcom = connexion_OCI();
+if (!$idcom) {
+    echo "connexion à la base de données IMPOSSIBLE ///";
+    exit;
+} else {
+    echo "connexion reussi";
+}
 
 // les cookies milka et nutella : 
 $Nom_at = isset($_COOKIE["NOM_ATHLETE_COOKIE"]) ? $_COOKIE["NOM_ATHLETE_COOKIE"] : "";
