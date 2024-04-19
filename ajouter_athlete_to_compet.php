@@ -28,21 +28,38 @@ if (
     $to_bind[] = ":type_epreuve";
     $the_values[] = $_POST["type_epreuve"];
 
-    $requete_ajout = "INSERT INTO PARTICIPE (ID_PART, ID_COMPET, NUM_EPREUVE, TYPE_EPREUVE) 
-    VALUES (:id_part, :id_compet, :num_epreuve, :type_epreuve)";
 
-    $ajout_stid = executerReq($idcom, $requete_ajout, $to_bind, $the_values);
-    if ($ajout_stid) {
-        setcookie("athlete_added", "success", time() + 60, "/");
-        header("Location :'competition.administration.modif.php?id_compet=" . $_POST["id_compet"] . "?type_co=" . $_POST["type_co"]  . "");
-        exit();
+
+
+    // verifions si je peux ajouter cet athléte ou pas : 
+    // s'il participe à l'épreuve déjà (meme type_epreuve et meme num_epreuve ) ; l'insertion est interdite 
+    $requete_verificatrice = "SELECT * FROM PARTICIPE 
+    WHERE id_part = :id_part 
+    AND id_compet = :id_compet 
+    AND num_epreuve = :num_epreuve
+    AND type_epreuve = :type_epreuve";
+    $verifier_stid = executerReq($idcom, $requete_verificatrice, $to_bind, $the_values);
+
+    if ($row = oci_fetch_assoc($verifier_stid)) {
+        $requete_ajout = "INSERT INTO PARTICIPE (ID_PART, ID_COMPET, NUM_EPREUVE, TYPE_EPREUVE) 
+                    VALUES (:id_part, :id_compet, :num_epreuve, :type_epreuve)";
+
+        $ajout_stid = executerReq($idcom, $requete_ajout, $to_bind, $the_values);
+        if ($ajout_stid) {
+            setcookie("athlete_added", "success", time() + 60, "/");
+            header("Location :'competition.administration.modif.php?id_compet=" . $_POST["id_compet"] . "?type_co=" . $_POST["type_co"]  . "");
+            exit();
+        } else {
+            setcookie("athlete_added", "failed", time() + 60, "/");
+            header("Location :'competition.administration.modif.php?id_compet=" . $_POST["id_compet"] . "?type_co=" . $_POST["type_co"]  . "");
+            exit();
+        }
     } else {
         setcookie("athlete_added", "failed", time() + 60, "/");
         header("Location :'competition.administration.modif.php?id_compet=" . $_POST["id_compet"] . "?type_co=" . $_POST["type_co"]  . "");
         exit();
     }
 }
-
 
 
 if (isset($_GET["id_compet"]) && isset($_GET["type_co"])) {
